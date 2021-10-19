@@ -104,10 +104,3 @@ internal class WaterMaskModifier(
 enum class Orientation(val orientation: Int) {
     BOTTOM_RIGHT(2), TOP_LEFT(1), HORIZONTAL(0)
 }
-
-data class WaterMaskConfig(
-    var mvColor: Color = Color.LightGray,
-    var mvTextSize: Float = 24f,
-    var mvCount: Int = 3,
-    var mvOrientation: Orientation = Orientation.BOTTOM_RIGHT,
-)
