@@ -44,40 +44,39 @@ internal class WaterMarkModifier(
         drawIntoCanvas {
             it.withSaveLayer(Rect(0f, 0f, size.width, size.height), paint = cleanPaint) {
                 drawContent()
-                if (!visible) {
-                    return
-                }
+                if (visible) {
 
-                if (config.row * config.column == 0) {
-                    throw IllegalArgumentException("WaterMarkConfig.row or WaterMarkConfig.column can not be Zero.")
-                }
-
-                val textWidth = config.maskText.length * config.mvTextSize
-
-                when (config.alignment) {
-                    Alignment.TopStart -> {
-                        it.rotate(config.degrees, mWidth / 2f, mHeight / 2f)
+                    if (config.row * config.column == 0) {
+                        throw IllegalArgumentException("WaterMarkConfig.row or WaterMarkConfig.column can not be Zero.")
                     }
-                    Alignment.BottomStart -> {
-                        it.rotate(config.degrees, mWidth / 2f, mHeight / 2f)
+
+                    val textWidth = config.maskText.length * config.mvTextSize
+
+                    when (config.alignment) {
+                        Alignment.TopStart -> {
+                        }
+                        Alignment.BottomStart -> {
+                        }
                     }
-                }
+                    it.rotate(config.degrees, mWidth / 2f, mHeight / 2f)
 
-                val textHeight: Float = paint.descent() - paint.ascent()
+                    val textHeight: Float = paint.descent() - paint.ascent()
 
-                for (i in 0 until config.row) {
-                    val top = (mHeight / config.row * i) + (mHeight / config.row - textHeight) / 2
-                    for (j in 0 until config.column) {
-                        val left =
-                            (mWidth - config.maskText.length * config.mvTextSize * config.column) / config.column * j + mWidth / config.column * j
-                        val textOffset: Float = textHeight / 2 - paint.descent()
-                        val bounds = RectF(left, top, left + textWidth, top + textHeight)
-                        it.nativeCanvas.drawText(
-                            config.maskText,
-                            bounds.centerX(),
-                            bounds.centerY() + textOffset,
-                            paint
-                        )
+                    for (i in 0 until config.row) {
+                        val top =
+                            (mHeight / config.row * i) + (mHeight / config.row - textHeight) / 2
+                        for (j in 0 until config.column) {
+                            val left =
+                                (mWidth - config.maskText.length * config.mvTextSize * config.column) / config.column * j + mWidth / config.column * j
+                            val textOffset: Float = textHeight / 2 - paint.descent()
+                            val bounds = RectF(left, top, left + textWidth, top + textHeight)
+                            it.nativeCanvas.drawText(
+                                config.maskText,
+                                bounds.centerX(),
+                                bounds.centerY() + textOffset,
+                                paint
+                            )
+                        }
                     }
                 }
             }
@@ -100,6 +99,5 @@ internal class WaterMarkModifier(
     private fun updateSize(size: Size) {
         mHeight = size.height.toInt()
         mWidth = size.width.toInt()
-        visible = true
     }
 }

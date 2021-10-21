@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.github.bqbs.compose.lib.watermark.WaterMarkConfig
 import com.github.bqbs.compose.lib.watermark.waterMark
 import com.github.bqbs.compose.watermark.ui.theme.WaterMarkInComposeTheme
+import kotlin.math.abs
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +33,14 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
                     Column {
 
-                        Text(text = "Slide to change the degrees")
+                        Text(text = "Slide to change the degrees(curr=${degrees.value.toInt()})")
 
                         Slider(
-                            value = degrees.value / 90f ,
+                            value = degrees.value / 90 * 0.5f + 0.5f,
                             onValueChange = {
-                                degrees.value = it % 0.5f * 90 * if (it / 0.5 > 0) 1 else -1
+
+                                degrees.value =
+                                    ((it - 0.5f) / 0.5f * 90)
                             })
                         LazyColumn(
                             modifier = Modifier
@@ -52,7 +55,7 @@ class MainActivity : ComponentActivity() {
                                         .fillMaxWidth()
                                         .height(200.dp)
                                         .waterMark(
-                                            true,
+                                            visible = false,
                                             config = WaterMarkConfig(
                                                 maskText = "@一窝鸡尼斯",
                                                 mvTextColor = Color(0xffeeeeee),
