@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.bqbs.compose.watermask">
+    package="com.github.bqbs.compose.watermark">
 
     <application
         android:allowBackup="true"
@@ -8,12 +8,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WaterMaskInCompose">
+        android:theme="@style/Theme.WaterMarkInCompose">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.WaterMaskInCompose.NoActionBar">
+            android:theme="@style/Theme.WaterMarkInCompose.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

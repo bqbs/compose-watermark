@@ -6,6 +6,6 @@ dependencyResolutionManagement {
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
-rootProject.name = "WaterMaskInCompose"
+rootProject.name = "WaterMarkInCompose"
 include ':app'
-include ':watermask'
+include ':watermark'
