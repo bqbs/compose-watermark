@@ -1,14 +1,10 @@
 package com.github.bqbs.compose.lib.watermask
 
-import android.graphics.Color
 import android.graphics.RectF
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.DrawModifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
@@ -18,7 +14,6 @@ import androidx.compose.ui.layout.LayoutModifier
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasureResult
 import androidx.compose.ui.layout.MeasureScope
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.Constraints
 import android.graphics.Paint as NPaint
 
@@ -37,6 +32,10 @@ internal class WaterMaskModifier(
     private val cleanPaint: Paint = Paint()
     private val paint = NPaint().apply {
         isAntiAlias = true
+        color = config.mvTextColor.toArgb()
+        textSize = config.mvTextSize
+        textAlign = NPaint.Align.CENTER
+        style = NPaint.Style.FILL_AND_STROKE
     }
     private var mWidth: Int = 0
     private var mHeight: Int = 0
@@ -54,15 +53,7 @@ internal class WaterMaskModifier(
                 }
 
                 val textWidth = config.maskText.length * config.mvTextSize
-                paint.reset()
-                paint.color = Color.RED
-                paint.color = config.mvTextColor.toArgb()
-                paint.textSize = config.mvTextSize
-                paint.style = NPaint.Style.STROKE
-                paint.textAlign = NPaint.Align.CENTER
-                paint.textAlign = NPaint.Align.CENTER
-                paint.style = NPaint.Style.FILL_AND_STROKE
-//                paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
+
                 when (config.alignment) {
                     Alignment.TopStart -> {
                         it.rotate(config.degrees, mWidth / 2f, mHeight / 2f)
@@ -73,7 +64,6 @@ internal class WaterMaskModifier(
                 }
 
                 val textHeight: Float = paint.descent() - paint.ascent()
-
 
                 for (i in 0 until config.row) {
                     val top = (mHeight / config.row * i) + (mHeight / config.row - textHeight) / 2

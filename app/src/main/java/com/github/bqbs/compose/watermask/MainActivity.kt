@@ -40,6 +40,26 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Row(
                             modifier = Modifier
+                                .background(Color(0xff64dd17))
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .waterMask(
+                                    true,
+                                    config = WaterMaskConfig(
+                                        maskText = "@一窝鸡尼斯",
+                                        mvTextColor = Color(0xffeeeeee),
+                                        row = 3,
+                                        column = 3,
+                                        alignment = Alignment.TopStart
+
+                                    )
+                                )
+                        ) {
+                            Text("Watermask not visible")
+                        }
+
+                        Row(
+                            modifier = Modifier
                                 .background(Color(0xffff3d00))
                                 .fillMaxWidth()
                                 .weight(1f)
