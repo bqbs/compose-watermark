@@ -61,7 +61,8 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
-                                                alignment = Alignment.TopStart
+                                                alignment = Alignment.TopStart,
+                                                degrees = degrees.value
 
                                             )
                                         )
@@ -81,14 +82,14 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
-                                                alignment = Alignment.BottomEnd,
+                                                alignment = Alignment.TopStart,
                                                 degrees = degrees.value
                                             )
                                         ),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Text("Android")
+                                    Text("Android(TopStart)")
                                 }
                                 Row(
                                     modifier = Modifier
@@ -103,12 +104,13 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 1,
                                                 column = 1,
-                                                alignment = Alignment.BottomEnd
+                                                alignment = Alignment.Center,
+                                                degrees = degrees.value
 
                                             )
                                         )
                                 ) {
-                                    Text("Android")
+                                    Text(text = "Android(Alignment.Center)")
                                 }
                                 Row(
                                     modifier = Modifier
@@ -123,40 +125,69 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
-                                                alignment = Alignment.TopStart
+                                                alignment = Alignment.TopEnd,
+                                                degrees = degrees.value
 
                                             )
                                         )
                                 ) {
-                                    Text("Android")
+                                    Text("Android(TopEnd)")
                                 }
 
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(200.dp)
-
-                                        .background(Color(0xff00e5ff))
+                                        .background(Color(0xffff3d00))
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
                                                 maskText = "@一窝鸡尼斯",
                                                 row = 3,
                                                 column = 3,
-                                                alignment = Alignment.TopStart
+                                                alignment = Alignment.Center,
+                                                degrees = degrees.value
+                                            )
+                                        ),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                                        Text(text = "Android(Alignment.Center)")
+
+                                        Button(onClick = {
+                                            Toast.makeText(
+                                                this@MainActivity,
+                                                "Click",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                        }) {
+                                            Text(text = "Click")
+                                        }
+                                    }
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .background(Color(0xff212121))
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+
+                                        .waterMark(
+                                            true,
+                                            config = WaterMarkConfig(
+                                                maskText = "@一窝鸡尼斯",
+                                                mvTextColor = Color(0xffeeeeee),
+                                                row = 2,
+                                                column = 2,
+                                                alignment = Alignment.BottomEnd,
+                                                degrees = degrees.value
+
                                             )
                                         )
                                 ) {
-                                    Button(onClick = {
-                                        Toast.makeText(
-                                            this@MainActivity,
-                                            "Click",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                            .show()
-                                    }) {
-                                        Text(text = "Click")
-                                    }
+                                    Text("Android(Alignment.BottomEnd)")
                                 }
                             }
                         }
