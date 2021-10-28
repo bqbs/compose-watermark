@@ -42,7 +42,14 @@ internal class WaterMarkModifier(
 
     override fun ContentDrawScope.draw() {
         drawIntoCanvas {
-            it.withSaveLayer(Rect(0f, 0f, size.width, size.height), paint = cleanPaint) {
+            it.withSaveLayer(
+                Rect(
+                    0f,
+                    0f,
+                    size.width,
+                    size.height
+                ), paint = cleanPaint
+            ) {
                 drawContent()
                 if (visible) {
 

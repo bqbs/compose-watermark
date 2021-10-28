@@ -10,7 +10,9 @@ class WaterMarkConfig(
     override var row: Int = 3,
     override var column: Int = 3,
     override var alignment: Alignment = Alignment.Center,
-    override var degrees: Float = 0f
+    override var degrees: Float = 0f,
+    override var paddingV: Float = 0f,
+    override var paddingH: Float = 0f
 ) : IWaterMarkConfig
 
 interface IWaterMarkConfig {
@@ -18,4 +20,6 @@ interface IWaterMarkConfig {
     var column: Int
     var alignment: Alignment
     var degrees: Float
+    var paddingV: Float
+    var paddingH: Float
 }
