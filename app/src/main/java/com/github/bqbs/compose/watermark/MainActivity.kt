@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
-                                                alignment = Alignment.TopStart,
+                                                alignment = Alignment.BottomEnd,
                                                 degrees = degrees.value
                                             )
                                         ),
@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 1,
                                                 column = 1,
-                                                alignment = Alignment.BottomStart
+                                                alignment = Alignment.BottomEnd
 
                                             )
                                         )

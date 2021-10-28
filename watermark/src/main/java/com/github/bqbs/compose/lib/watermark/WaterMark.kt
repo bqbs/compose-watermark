@@ -63,13 +63,40 @@ internal class WaterMarkModifier(
                     val textHeight: Float = paint.descent() - paint.ascent()
 
                     for (i in 0 until config.row) {
-                        val top =
-                            (mHeight / config.row * i) + (mHeight / config.row - textHeight) / 2
+                        val top:Float = when (config.alignment) {
+                            Alignment.TopCenter, Alignment.TopStart, Alignment.TopEnd, Alignment.Top -> {
+                                // TOP
+                                (mHeight / config.row * i).toFloat()
+                            }
+                            Alignment.BottomEnd, Alignment.BottomCenter, Alignment.BottomStart, Alignment.Bottom -> {
+                                // Bottom
+                                (mHeight / config.row * i) + (mHeight / config.row - textHeight)
+                            }
+                            Alignment.CenterStart, Alignment.CenterEnd, Alignment.Center, Alignment.CenterVertically -> {
+                                // CenterVertically
+                                (mHeight / config.row * i) + (mHeight / config.row - textHeight) / 2
+                            }
+                            else -> (mHeight / config.row * i).toFloat()
+
+                        }
+
                         for (j in 0 until config.column) {
-                            val left =
-                                (mWidth - config.maskText.length * config.mvTextSize * config.column) / config.column * j + mWidth / config.column * j
+                            val left = when (config.alignment) {
+                                Alignment.BottomStart, Alignment.TopStart, Alignment.CenterStart, Alignment.Start -> {
+                                    mWidth / config.column * j
+                                }
+                                Alignment.CenterEnd, Alignment.TopEnd, Alignment.BottomEnd, Alignment.End -> {
+                                    (mWidth - config.maskText.length * config.mvTextSize * config.column) / config.column * j + mWidth / config.column * j
+
+                                }
+                                Alignment.TopCenter, Alignment.BottomCenter, Alignment.Center, Alignment.CenterHorizontally -> {
+                                    (mWidth - config.maskText.length * config.mvTextSize * config.column) / config.column * j/2f + mWidth / config.column * j
+                                }
+                                else -> (mWidth - config.maskText.length * config.mvTextSize * config.column) / config.column * j + mWidth / config.column * j
+                            }
+
                             val textOffset: Float = textHeight / 2 - paint.descent()
-                            val bounds = RectF(left, top, left + textWidth, top + textHeight)
+                            val bounds = RectF(left.toFloat(), top, left.toFloat() + textWidth, top + textHeight)
                             it.nativeCanvas.drawText(
                                 config.maskText,
                                 bounds.centerX(),
