@@ -26,11 +26,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             WaterMarkInComposeTheme {
                 // A surface container using the 'background' color from the theme
-                var degrees = remember {
-                    mutableStateOf<Float>(0f)
-                }
+                var degrees by remember { mutableStateOf(0f) }
                 var expanded by remember { mutableStateOf(false) }
-                var alignment by remember { mutableStateOf(Alignment.Center) }
+                var alignmentPair by remember { mutableStateOf<Pair<String, Alignment?>>("Change Alignment" to null) }
+                var isVisible by remember { mutableStateOf(true) }
                 val alignments = listOf(
                     "Alignment.TopStart" to Alignment.TopStart,
                     "Alignment.TopCenter" to Alignment.TopCenter,
@@ -45,38 +44,46 @@ class MainActivity : ComponentActivity() {
 
                 Surface(color = MaterialTheme.colors.background) {
                     Column {
-
-                        Button(onClick = { expanded = !expanded }) {
-                            Text("Change Alignment")
-                            Icon(
-                                imageVector = Icons.Filled.ArrowDropDown,
-                                contentDescription = null,
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            modifier = Modifier.wrapContentSize()
+                        Box(
+                            modifier = Modifier.padding(20.dp),
                         ) {
-                            alignments.forEach { label ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        expanded = false
-                                        alignment = label.second
-                                    },
-                                ) {
-                                    Text(text = label.first)
+
+                            Text(text = "WaterMarkConfig")
+                            Button(
+                                onClick = { expanded = !expanded }) {
+                                Text(alignmentPair.first)
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowDropDown,
+                                    contentDescription = null,
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                modifier = Modifier
+                                    .wrapContentSize()
+                            ) {
+                                alignments.forEach { label ->
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            expanded = false
+                                            alignmentPair = label
+                                        },
+                                    ) {
+                                        Text(text = label.first)
+                                    }
                                 }
                             }
                         }
 
-                        Text(text = "Slide to change the degrees(curr=${degrees.value.toInt()})")
 
+                        Text(text = "Slide to change the degrees(curr=${degrees.toInt()})")
                         Slider(
-                            value = degrees.value / 90 * 0.5f + 0.5f,
+                            value = degrees / 90 * 0.5f + 0.5f,
                             onValueChange = {
 
-                                degrees.value =
+                                degrees =
                                     ((it - 0.5f) / 0.5f * 90)
                             })
 
@@ -87,25 +94,41 @@ class MainActivity : ComponentActivity() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             item {
-                                Row(
+                                Column(
                                     modifier = Modifier
                                         .background(Color(0xff64dd17))
                                         .fillMaxWidth()
                                         .height(200.dp)
                                         .waterMark(
-                                            visible = false,
+                                            visible = isVisible,
                                             config = WaterMarkConfig(
                                                 maskText = "@一窝鸡尼斯",
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
-                                                alignment = alignment,
-                                                degrees = degrees.value
-
+                                                alignment = alignmentPair.second
+                                                    ?: Alignment.Center,
+                                                degrees = degrees
                                             )
-                                        )
+                                        ),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
-                                    Text("Watermark not visible")
+                                    Box {
+                                        Text(
+                                            text = "人法地 地法天 天法道 道法孜然\uD83C\uDF57\uD83C\uDF57"
+                                        )
+
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.padding(20.dp),
+                                    ) {
+                                        Checkbox(checked = isVisible, onCheckedChange = {
+                                            isVisible = it
+                                        })
+                                        Text(text = "Show WaterMark")
+                                    }
+
                                 }
 
                                 Row(
@@ -120,8 +143,9 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
-                                                alignment = alignment,
-                                                degrees = degrees.value
+                                                alignment = alignmentPair.second
+                                                    ?: Alignment.Center,
+                                                degrees = degrees
                                             )
                                         ),
                                     verticalAlignment = Alignment.CenterVertically,
@@ -141,21 +165,21 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 1,
                                                 column = 1,
-                                                alignment = alignment,
-                                                degrees = degrees.value,
-                                                paddingH = 20f.dp.value
+                                                alignment = alignmentPair.second
+                                                    ?: Alignment.Center,
+                                                degrees = degrees,
+                                                paddingVertical = 40f.dp.value,
+                                                paddingHorizontal = 40f.dp.value
                                             )
                                         )
-
                                 ) {
-                                    Text(text = "Android(Alignment.Center)")
+                                    Text(text = "Android")
                                 }
                                 Row(
                                     modifier = Modifier
                                         .background(Color(0xff64dd17))
                                         .fillMaxWidth()
                                         .height(200.dp)
-
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
@@ -163,8 +187,9 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
-                                                alignment = alignment,
-                                                degrees = degrees.value
+                                                alignment = alignmentPair.second
+                                                    ?: Alignment.Center,
+                                                degrees = degrees
 
                                             )
                                         )
@@ -183,8 +208,9 @@ class MainActivity : ComponentActivity() {
                                                 maskText = "@一窝鸡尼斯",
                                                 row = 3,
                                                 column = 3,
-                                                alignment = alignment,
-                                                degrees = degrees.value
+                                                alignment = alignmentPair.second
+                                                    ?: Alignment.Center,
+                                                degrees = degrees
                                             )
                                         ),
                                     verticalAlignment = Alignment.CenterVertically,
@@ -211,7 +237,6 @@ class MainActivity : ComponentActivity() {
                                         .background(Color(0xff212121))
                                         .fillMaxWidth()
                                         .height(200.dp)
-
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
@@ -219,13 +244,14 @@ class MainActivity : ComponentActivity() {
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 2,
                                                 column = 2,
-                                                alignment = alignment,
-                                                degrees = degrees.value
+                                                alignment = alignmentPair.second
+                                                    ?: Alignment.Center,
+                                                degrees = degrees
 
                                             )
                                         )
                                 ) {
-                                    Text("Android(Alignment.BottomEnd)")
+                                    Text("Android($alignmentPair)")
                                 }
                             }
                         }
@@ -252,5 +278,3 @@ fun DefaultPreview() {
 
     }
 }
-
-fun Alignment.getName(): String = this.toString()

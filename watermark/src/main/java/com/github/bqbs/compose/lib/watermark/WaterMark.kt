@@ -37,10 +37,11 @@ internal class WaterMarkModifier(
         textAlign = NPaint.Align.CENTER
         style = NPaint.Style.FILL_AND_STROKE
     }
-    private var mWidth: Int = 0
-    private var mHeight: Int = 0
+    private var mComponentWidth: Int = 0
+    private var mComponentHeight: Int = 0
 
     override fun ContentDrawScope.draw() {
+
         drawIntoCanvas {
             it.withSaveLayer(
                 Rect(
@@ -51,6 +52,7 @@ internal class WaterMarkModifier(
                 ), paint = cleanPaint
             ) {
                 drawContent()
+
                 if (visible) {
 
                     if (config.row * config.column == 0) {
@@ -65,50 +67,54 @@ internal class WaterMarkModifier(
                         Alignment.BottomStart -> {
                         }
                     }
-                    it.rotate(config.degrees, mWidth / 2f, mHeight / 2f)
+                    it.rotate(config.degrees, mComponentWidth / 2f, mComponentHeight / 2f)
 
                     val textHeight: Float = paint.descent() - paint.ascent()
-
+                    // make padding for watermark
+                    val wmWidth = mComponentWidth - (config.paddingVertical * 2)
+                    val wmHeight = mComponentHeight - (config.paddingHorizontal * 2)
                     for (i in 0 until config.row) {
-                        val top: Float = when (config.alignment) {
+                        var top: Float = config.paddingHorizontal + when (config.alignment) {
                             Alignment.TopCenter, Alignment.TopStart, Alignment.TopEnd, Alignment.Top -> {
                                 // TOP
-                                (mHeight / config.row * i).toFloat()
+                                (wmHeight / config.row * i)
                             }
                             Alignment.BottomEnd, Alignment.BottomCenter, Alignment.BottomStart, Alignment.Bottom -> {
                                 // Bottom
-                                (mHeight / config.row * i) + (mHeight / config.row - textHeight)
+                                (wmHeight / config.row * i) + (wmHeight / config.row - textHeight)
                             }
                             Alignment.CenterStart, Alignment.CenterEnd, Alignment.Center, Alignment.CenterVertically -> {
                                 // CenterVertically
-                                (mHeight / config.row * i) + (mHeight / config.row - textHeight) / 2
+                                (wmHeight / config.row * i) + (wmHeight / config.row - textHeight) / 2
                             }
-                            else -> (mHeight / config.row * i).toFloat()
+                            else -> (wmHeight / config.row * i)
 
                         }
 
                         for (j in 0 until config.column) {
-                            val left = when (config.alignment) {
+                            // Add padding for WaterMark
+                            val left = config.paddingVertical + when (config.alignment) {
                                 Alignment.BottomStart, Alignment.TopStart, Alignment.CenterStart, Alignment.Start -> {
-                                    mWidth / config.column * j
+                                    // Start
+                                    wmWidth / config.column * j
                                 }
                                 Alignment.CenterEnd, Alignment.TopEnd, Alignment.BottomEnd, Alignment.End -> {
-                                    (mWidth / config.column - config.maskText.length * config.mvTextSize) + (mWidth / config.column * j)
-
+                                    // End
+                                    (wmWidth / config.column - config.maskText.length * config.mvTextSize) + (wmWidth / config.column * j)
                                 }
                                 Alignment.TopCenter, Alignment.BottomCenter, Alignment.Center, Alignment.CenterHorizontally -> {
-                                    ((mWidth / config.column - config.maskText.length * config.mvTextSize) / 2f) + (mWidth / config.column * j)
+                                    // CenterHorizontally
+                                    ((wmWidth / config.column - config.maskText.length * config.mvTextSize) / 2f) + (wmWidth / config.column * j)
                                 }
                                 else -> {
-                                    mWidth / config.column * j
+                                    wmWidth / config.column * j
                                 }
                             }
 
                             val textOffset: Float = textHeight / 2 - paint.descent()
                             val bounds = RectF(
-                                left.toFloat(),
-                                top,
-                                left.toFloat() + textWidth,
+                                left, top,
+                                left + textWidth,
                                 top + textHeight
                             )
                             it.nativeCanvas.drawText(
@@ -138,7 +144,7 @@ internal class WaterMarkModifier(
     }
 
     private fun updateSize(size: Size) {
-        mHeight = size.height.toInt()
-        mWidth = size.width.toInt()
+        mComponentHeight = size.height.toInt()
+        mComponentWidth = size.width.toInt()
     }
 }
