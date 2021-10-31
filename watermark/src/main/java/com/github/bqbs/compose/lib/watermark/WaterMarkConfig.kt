@@ -14,8 +14,8 @@ data class WaterMarkConfig(
     override var column: Int = 3,
     override var alignment: Alignment = Alignment.Center,
     override var degrees: Float = 0f,
-    override var paddingHorizontal: Float = 0f,
-    override var paddingVertical: Float = 0f
+    override var paddingVertical: Float = 0f,
+    override var paddingHorizontal: Float = 0f
 ) : IWaterMarkConfig
 
 interface IWaterMarkConfig {
@@ -34,12 +34,12 @@ interface IWaterMarkConfig {
     var degrees: Float
 
     /**
-     * Padding for start or end
-     */
-    var paddingHorizontal: Float
-
-    /**
      * Padding for top or bottom
      */
     var paddingVertical: Float
+
+    /**
+     * Padding for start or end
+     */
+    var paddingHorizontal: Float
 }

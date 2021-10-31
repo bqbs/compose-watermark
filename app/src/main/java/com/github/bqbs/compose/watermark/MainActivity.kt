@@ -112,12 +112,14 @@ class MainActivity : ComponentActivity() {
                                             )
                                         ),
                                     horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
                                 ) {
-                                    Box {
-                                        Text(
-                                            text = "人法地 地法天 天法道 道法孜然\uD83C\uDF57\uD83C\uDF57"
-                                        )
 
+                                    Row(horizontalArrangement = Arrangement.Center) {
+
+                                        Text(
+                                            text = "人法地 地法天 天法道 道法孜然\uD83C\uDF57\uD83C\uDF57",
+                                        )
                                     }
 
                                     Row(
@@ -128,6 +130,7 @@ class MainActivity : ComponentActivity() {
                                         })
                                         Text(text = "Show WaterMark")
                                     }
+
 
                                 }
 
@@ -151,7 +154,7 @@ class MainActivity : ComponentActivity() {
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Text("Android(TopStart)")
+                                    Text("Android")
                                 }
                                 Row(
                                     modifier = Modifier
@@ -168,8 +171,8 @@ class MainActivity : ComponentActivity() {
                                                 alignment = alignmentPair.second
                                                     ?: Alignment.Center,
                                                 degrees = degrees,
-                                                paddingVertical = 40f.dp.value,
-                                                paddingHorizontal = 40f.dp.value
+                                                paddingHorizontal = 40f.dp.value,
+                                                paddingVertical = 40f.dp.value
                                             )
                                         )
                                 ) {
@@ -194,7 +197,7 @@ class MainActivity : ComponentActivity() {
                                             )
                                         )
                                 ) {
-                                    Text("Android(TopEnd)")
+                                    Text("Android")
                                 }
 
                                 Row(
@@ -218,7 +221,7 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                                        Text(text = "Android(Alignment.Center)")
+                                        Text(text = "Android")
 
                                         Button(onClick = {
                                             Toast.makeText(
@@ -251,7 +254,7 @@ class MainActivity : ComponentActivity() {
                                             )
                                         )
                                 ) {
-                                    Text("Android($alignmentPair)")
+                                    Text("Android")
                                 }
                             }
                         }

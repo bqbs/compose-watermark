@@ -71,10 +71,10 @@ internal class WaterMarkModifier(
 
                     val textHeight: Float = paint.descent() - paint.ascent()
                     // make padding for watermark
-                    val wmWidth = mComponentWidth - (config.paddingVertical * 2)
-                    val wmHeight = mComponentHeight - (config.paddingHorizontal * 2)
+                    val wmWidth = mComponentWidth - (config.paddingHorizontal * 2)
+                    val wmHeight = mComponentHeight - (config.paddingVertical * 2)
                     for (i in 0 until config.row) {
-                        var top: Float = config.paddingHorizontal + when (config.alignment) {
+                        var top: Float = config.paddingVertical + when (config.alignment) {
                             Alignment.TopCenter, Alignment.TopStart, Alignment.TopEnd, Alignment.Top -> {
                                 // TOP
                                 (wmHeight / config.row * i)
@@ -93,7 +93,7 @@ internal class WaterMarkModifier(
 
                         for (j in 0 until config.column) {
                             // Add padding for WaterMark
-                            val left = config.paddingVertical + when (config.alignment) {
+                            val left = config.paddingHorizontal + when (config.alignment) {
                                 Alignment.BottomStart, Alignment.TopStart, Alignment.CenterStart, Alignment.Start -> {
                                     // Start
                                     wmWidth / config.column * j
