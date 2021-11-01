@@ -17,9 +17,11 @@ import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.unit.Constraints
 import android.graphics.Paint as NPaint
 
-
+/**
+ *
+ */
 fun Modifier.waterMark(
-    visible: Boolean,
+    visible: Boolean = true,
     config: WaterMarkConfig
 ): Modifier = composed {
     WaterMarkModifier(visible = visible, config = config)
@@ -42,6 +44,7 @@ internal class WaterMarkModifier(
 
     override fun ContentDrawScope.draw() {
 
+        paint.textSize
         drawIntoCanvas {
             it.withSaveLayer(
                 Rect(
@@ -59,7 +62,7 @@ internal class WaterMarkModifier(
                         throw IllegalArgumentException("WaterMarkConfig.row or WaterMarkConfig.column can not be Zero.")
                     }
 
-                    val textWidth = config.maskText.length * config.mvTextSize
+                    val textWidth = config.markText.length * config.mvTextSize
 
                     when (config.alignment) {
                         Alignment.TopStart -> {
@@ -100,11 +103,11 @@ internal class WaterMarkModifier(
                                 }
                                 Alignment.CenterEnd, Alignment.TopEnd, Alignment.BottomEnd, Alignment.End -> {
                                     // End
-                                    (wmWidth / config.column - config.maskText.length * config.mvTextSize) + (wmWidth / config.column * j)
+                                    (wmWidth / config.column - config.markText.length * config.mvTextSize) + (wmWidth / config.column * j)
                                 }
                                 Alignment.TopCenter, Alignment.BottomCenter, Alignment.Center, Alignment.CenterHorizontally -> {
                                     // CenterHorizontally
-                                    ((wmWidth / config.column - config.maskText.length * config.mvTextSize) / 2f) + (wmWidth / config.column * j)
+                                    ((wmWidth / config.column - config.markText.length * config.mvTextSize) / 2f) + (wmWidth / config.column * j)
                                 }
                                 else -> {
                                     wmWidth / config.column * j
@@ -118,7 +121,7 @@ internal class WaterMarkModifier(
                                 top + textHeight
                             )
                             it.nativeCanvas.drawText(
-                                config.maskText,
+                                config.markText,
                                 bounds.centerX(),
                                 bounds.centerY() + textOffset,
                                 paint

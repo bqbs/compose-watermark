@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
  * Configure for watermark
  */
 data class WaterMarkConfig(
-    var maskText: String,
+    var markText: String,
     var mvTextColor: Color = Color.LightGray,
     var mvTextSize: Float = 36f,
     override var row: Int = 3,

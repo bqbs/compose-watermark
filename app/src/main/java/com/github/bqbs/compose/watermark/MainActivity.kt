@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
                                         .waterMark(
                                             visible = isVisible,
                                             config = WaterMarkConfig(
-                                                maskText = "@一窝鸡尼斯",
+                                                markText = "@一窝鸡尼斯",
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
@@ -136,35 +136,13 @@ class MainActivity : ComponentActivity() {
 
                                 Row(
                                     modifier = Modifier
-                                        .background(Color(0xffff3d00))
-                                        .fillMaxWidth()
-                                        .height(200.dp)
-                                        .waterMark(
-                                            true,
-                                            config = WaterMarkConfig(
-                                                maskText = "@一窝鸡尼斯",
-                                                mvTextColor = Color(0xffeeeeee),
-                                                row = 3,
-                                                column = 3,
-                                                alignment = alignmentPair.second
-                                                    ?: Alignment.Center,
-                                                degrees = degrees
-                                            )
-                                        ),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Text("Android")
-                                }
-                                Row(
-                                    modifier = Modifier
                                         .background(Color(0xff212121))
                                         .fillMaxWidth()
                                         .height(200.dp)
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
-                                                maskText = "@一窝鸡尼斯",
+                                                markText = "@一窝鸡尼斯",
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 1,
                                                 column = 1,
@@ -180,35 +158,13 @@ class MainActivity : ComponentActivity() {
                                 }
                                 Row(
                                     modifier = Modifier
-                                        .background(Color(0xff64dd17))
-                                        .fillMaxWidth()
-                                        .height(200.dp)
-                                        .waterMark(
-                                            true,
-                                            config = WaterMarkConfig(
-                                                maskText = "@一窝鸡尼斯",
-                                                mvTextColor = Color(0xffeeeeee),
-                                                row = 3,
-                                                column = 3,
-                                                alignment = alignmentPair.second
-                                                    ?: Alignment.Center,
-                                                degrees = degrees
-
-                                            )
-                                        )
-                                ) {
-                                    Text("Android")
-                                }
-
-                                Row(
-                                    modifier = Modifier
                                         .fillMaxWidth()
                                         .height(200.dp)
                                         .background(Color(0xffff3d00))
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
-                                                maskText = "@一窝鸡尼斯",
+                                                markText = "@一窝鸡尼斯",
                                                 row = 3,
                                                 column = 3,
                                                 alignment = alignmentPair.second
@@ -243,7 +199,7 @@ class MainActivity : ComponentActivity() {
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
-                                                maskText = "@一窝鸡尼斯",
+                                                markText = "@一窝鸡尼斯",
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 2,
                                                 column = 2,
