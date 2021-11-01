@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,8 +15,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.github.bqbs.compose.lib.watermark.WaterMarkConfig
 import com.github.bqbs.compose.lib.watermark.waterMark
 import com.github.bqbs.compose.watermark.ui.theme.WaterMarkInComposeTheme
@@ -134,6 +138,7 @@ class MainActivity : ComponentActivity() {
 
                                 }
 
+                                var size by remember { mutableStateOf(IntSize.Zero) }
                                 Row(
                                     modifier = Modifier
                                         .background(Color(0xff212121))
@@ -153,8 +158,14 @@ class MainActivity : ComponentActivity() {
                                                 paddingVertical = 40f.dp.value
                                             )
                                         )
+                                        .onSizeChanged { size = it }
                                 ) {
-                                    Text(text = "Android")
+                                    Image(
+                                        modifier = Modifier.fillMaxSize(),
+                                        painter = rememberImagePainter("https://picsum.photos/${size.width}/${size.height}"),
+                                        contentDescription = "",
+                                        alignment = Alignment.Center
+                                    )
                                 }
                                 Row(
                                     modifier = Modifier

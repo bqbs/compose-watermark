@@ -77,7 +77,7 @@ internal class WaterMarkModifier(
                     val wmWidth = mComponentWidth - (config.paddingHorizontal * 2)
                     val wmHeight = mComponentHeight - (config.paddingVertical * 2)
                     for (i in 0 until config.row) {
-                        var top: Float = config.paddingVertical + when (config.alignment) {
+                        val top: Float = config.paddingVertical + when (config.alignment) {
                             Alignment.TopCenter, Alignment.TopStart, Alignment.TopEnd, Alignment.Top -> {
                                 // TOP
                                 (wmHeight / config.row * i)
@@ -115,15 +115,15 @@ internal class WaterMarkModifier(
                             }
 
                             val textOffset: Float = textHeight / 2 - paint.descent()
-                            val bounds = RectF(
+                            val txtBound = RectF(
                                 left, top,
                                 left + textWidth,
                                 top + textHeight
                             )
                             it.nativeCanvas.drawText(
                                 config.markText,
-                                bounds.centerX(),
-                                bounds.centerY() + textOffset,
+                                txtBound.centerX(),
+                                txtBound.centerY() + textOffset,
                                 paint
                             )
                         }
