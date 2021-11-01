@@ -61,10 +61,9 @@ config = WaterMarkConfig(
 
 ### 基本原理
 
-- 在 `watermark` 里面就两个文件。动手就行:ghost:👻
-- 最重要的一点实现是 Modifier 链的原理。滚动到下方看 **大佬 RugerMc 的图解Compose Modifier实现原理 ，竟然如此简单！** 这篇文章。真得很受用）
+- 在 `watermark` 里面就两个文件。动手就行👻👻
+- 最重要的一点是 Modifier 链的原理。滚动到下方看 **大佬 RugerMc 的图解Compose Modifier实现原理 ，竟然如此简单！** 这篇文章。真得很受用）
 - 基本的实现就是计算位置，绘制
-
 - 这是唯一一段我觉得你们可以收藏起来的代码（如何在Jetpack Compose Canvas里面绘制文本）
 
 ``` java
@@ -100,6 +99,8 @@ it.nativeCanvas.drawText(
 
 [图解Compose Modifier实现原理 ，竟然如此简单！by RugerMc](https://juejin.cn/user/1714893871911502)
 
-强烈建议建议去点赞他们～
+看我文章也就图一乐，真要学东西还得看👆🏻大佬的，强烈建议建议去点赞他们～
 
-我的随意就好
+我的随意就好。
+
+自由转载，留个言就行～
