@@ -5,6 +5,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.DrawModifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
@@ -56,76 +57,97 @@ internal class WaterMarkModifier(
             ) {
                 drawContent()
 
-                if (visible) {
+                if (!visible) {
+                    return@drawIntoCanvas
+                }
 
-                    if (config.row * config.column == 0) {
-                        throw IllegalArgumentException("WaterMarkConfig.row or WaterMarkConfig.column can not be Zero.")
+                if (config.row * config.column == 0) {
+                    throw IllegalArgumentException("WaterMarkConfig.row or WaterMarkConfig.column can not be Zero.")
+                }
+
+                val textWidth = config.markText.length * config.mvTextSize
+
+                it.rotate(config.degrees, mComponentWidth / 2f, mComponentHeight / 2f)
+
+                val textHeight: Float = paint.descent() - paint.ascent()
+                // make padding for watermark
+                val wmWidth = mComponentWidth - (config.paddingHorizontal * 2)
+                val wmHeight = mComponentHeight - (config.paddingVertical * 2)
+                for (i in 0 until config.row) {
+                    val top: Float = config.paddingVertical + when (config.alignment) {
+                        Alignment.TopCenter, Alignment.TopStart, Alignment.TopEnd, Alignment.Top -> {
+                            // TOP
+                            (wmHeight / config.row * i)
+                        }
+                        Alignment.BottomEnd, Alignment.BottomCenter, Alignment.BottomStart, Alignment.Bottom -> {
+                            // Bottom
+                            (wmHeight / config.row * i) + (wmHeight / config.row - textHeight)
+                        }
+                        Alignment.CenterStart, Alignment.CenterEnd, Alignment.Center, Alignment.CenterVertically -> {
+                            // CenterVertically
+                            (wmHeight / config.row * i) + (wmHeight / config.row - textHeight) / 2
+                        }
+                        else -> (wmHeight / config.row * i)
+
                     }
 
-                    val textWidth = config.markText.length * config.mvTextSize
-
-                    when (config.alignment) {
-                        Alignment.TopStart -> {
-                        }
-                        Alignment.BottomStart -> {
-                        }
-                    }
-                    it.rotate(config.degrees, mComponentWidth / 2f, mComponentHeight / 2f)
-
-                    val textHeight: Float = paint.descent() - paint.ascent()
-                    // make padding for watermark
-                    val wmWidth = mComponentWidth - (config.paddingHorizontal * 2)
-                    val wmHeight = mComponentHeight - (config.paddingVertical * 2)
-                    for (i in 0 until config.row) {
-                        val top: Float = config.paddingVertical + when (config.alignment) {
-                            Alignment.TopCenter, Alignment.TopStart, Alignment.TopEnd, Alignment.Top -> {
-                                // TOP
-                                (wmHeight / config.row * i)
+                    for (j in 0 until config.column) {
+                        // Add padding for WaterMark
+                        val left = config.paddingHorizontal + when (config.alignment) {
+                            Alignment.BottomStart, Alignment.TopStart, Alignment.CenterStart, Alignment.Start -> {
+                                // Start
+                                wmWidth / config.column * j
                             }
-                            Alignment.BottomEnd, Alignment.BottomCenter, Alignment.BottomStart, Alignment.Bottom -> {
-                                // Bottom
-                                (wmHeight / config.row * i) + (wmHeight / config.row - textHeight)
+                            Alignment.CenterEnd, Alignment.TopEnd, Alignment.BottomEnd, Alignment.End -> {
+                                // End
+                                (wmWidth / config.column - config.markText.length * config.mvTextSize) + (wmWidth / config.column * j)
                             }
-                            Alignment.CenterStart, Alignment.CenterEnd, Alignment.Center, Alignment.CenterVertically -> {
-                                // CenterVertically
-                                (wmHeight / config.row * i) + (wmHeight / config.row - textHeight) / 2
+                            Alignment.TopCenter, Alignment.BottomCenter, Alignment.Center, Alignment.CenterHorizontally -> {
+                                // CenterHorizontally
+                                ((wmWidth / config.column - config.markText.length * config.mvTextSize) / 2f) + (wmWidth / config.column * j)
                             }
-                            else -> (wmHeight / config.row * i)
-
+                            else -> {
+                                wmWidth / config.column * j
+                            }
                         }
 
-                        for (j in 0 until config.column) {
-                            // Add padding for WaterMark
-                            val left = config.paddingHorizontal + when (config.alignment) {
-                                Alignment.BottomStart, Alignment.TopStart, Alignment.CenterStart, Alignment.Start -> {
-                                    // Start
-                                    wmWidth / config.column * j
+                        val textOffset: Float = textHeight / 2 - paint.descent()
+                        val txtBound = RectF(
+                            left, top,
+                            left + textWidth,
+                            top + textHeight
+                        )
+                        it.nativeCanvas.drawText(
+                            config.markText,
+                            txtBound.centerX(),
+                            txtBound.centerY() + textOffset,
+                            paint
+                        )
+
+                        config.icon?.let { bmp ->
+                            val bmpWidth = bmp.width
+                            val bmpHeight = bmp.height
+                            var offsetX = 0f
+                            var offsetY = 0f
+                            when (config.iconPosition) {
+                                IconPosition.ABOVE -> {
+                                    offsetY = txtBound.top - bmpHeight
+                                    offsetX = txtBound.centerX() - bmpWidth / 2
                                 }
-                                Alignment.CenterEnd, Alignment.TopEnd, Alignment.BottomEnd, Alignment.End -> {
-                                    // End
-                                    (wmWidth / config.column - config.markText.length * config.mvTextSize) + (wmWidth / config.column * j)
+                                IconPosition.BELOW -> {
+                                    offsetY = txtBound.bottom
+                                    offsetX = txtBound.centerX() - bmpWidth / 2
                                 }
-                                Alignment.TopCenter, Alignment.BottomCenter, Alignment.Center, Alignment.CenterHorizontally -> {
-                                    // CenterHorizontally
-                                    ((wmWidth / config.column - config.markText.length * config.mvTextSize) / 2f) + (wmWidth / config.column * j)
+                                IconPosition.START -> {
+                                    offsetX = txtBound.left - bmpWidth
+                                    offsetY = txtBound.centerY() - bmpHeight / 2
                                 }
-                                else -> {
-                                    wmWidth / config.column * j
+                                IconPosition.END -> {
+                                    offsetX = txtBound.right
+                                    offsetY = txtBound.centerY() - bmpHeight / 2
                                 }
                             }
-
-                            val textOffset: Float = textHeight / 2 - paint.descent()
-                            val txtBound = RectF(
-                                left, top,
-                                left + textWidth,
-                                top + textHeight
-                            )
-                            it.nativeCanvas.drawText(
-                                config.markText,
-                                txtBound.centerX(),
-                                txtBound.centerY() + textOffset,
-                                paint
-                            )
+                            it.drawImage(bmp, Offset(offsetX, offsetY), cleanPaint)
                         }
                     }
                 }

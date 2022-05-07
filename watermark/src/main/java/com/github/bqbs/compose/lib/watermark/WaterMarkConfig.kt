@@ -2,6 +2,7 @@ package com.github.bqbs.compose.lib.watermark
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 
 /**
  * Configure for watermark
@@ -15,7 +16,9 @@ data class WaterMarkConfig(
     override var alignment: Alignment = Alignment.Center,
     override var degrees: Float = 0f,
     override var paddingVertical: Float = 0f,
-    override var paddingHorizontal: Float = 0f
+    override var paddingHorizontal: Float = 0f,
+    var icon: ImageBitmap? = null,
+    var iconPosition: IconPosition = IconPosition.START
 ) : IWaterMarkConfig
 
 interface IWaterMarkConfig {

@@ -15,11 +15,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.github.bqbs.compose.lib.watermark.IconPosition
 import com.github.bqbs.compose.lib.watermark.WaterMarkConfig
 import com.github.bqbs.compose.lib.watermark.waterMark
 import com.github.bqbs.compose.watermark.ui.theme.WaterMarkInComposeTheme
@@ -32,6 +35,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 var degrees by remember { mutableStateOf(0f) }
                 var expanded by remember { mutableStateOf(false) }
+                var expandedIconPosition by remember { mutableStateOf(false) }
                 var alignmentPair by remember { mutableStateOf<Pair<String, Alignment?>>("Change Alignment" to null) }
                 var isVisible by remember { mutableStateOf(true) }
                 val alignments = listOf(
@@ -45,42 +49,78 @@ class MainActivity : ComponentActivity() {
                     "Alignment.BottomCenter" to Alignment.BottomCenter,
                     "Alignment.BottomEnd" to Alignment.BottomEnd,
                 )
+                var iconPosition by remember {
+                    mutableStateOf<IconPosition>(IconPosition.START)
+                }
 
                 Surface(color = MaterialTheme.colors.background) {
                     Column {
-                        Box(
-                            modifier = Modifier.padding(20.dp),
-                        ) {
-
-                            Text(text = "WaterMarkConfig")
-                            Button(
-                                onClick = { expanded = !expanded }) {
-                                Text(alignmentPair.first)
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowDropDown,
-                                    contentDescription = null,
-                                )
-                            }
-
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                                modifier = Modifier
-                                    .wrapContentSize()
+                        Row {
+                            Box(
+                                modifier = Modifier.padding(20.dp),
                             ) {
-                                alignments.forEach { label ->
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            expanded = false
-                                            alignmentPair = label
-                                        },
-                                    ) {
-                                        Text(text = label.first)
+
+                                Text(text = "WaterMarkConfig")
+                                Button(
+                                    onClick = { expanded = !expanded }) {
+                                    Text(alignmentPair.first)
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowDropDown,
+                                        contentDescription = null,
+                                    )
+                                }
+
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false },
+                                    modifier = Modifier
+                                        .wrapContentSize()
+                                ) {
+                                    alignments.forEach { label ->
+                                        DropdownMenuItem(
+                                            onClick = {
+                                                expanded = false
+                                                alignmentPair = label
+                                            },
+                                        ) {
+                                            Text(text = label.first)
+                                        }
+                                    }
+                                }
+
+                            }
+                            Box(
+                                modifier = Modifier.padding(20.dp),
+                            ) {
+
+                                Button(
+                                    onClick = { expandedIconPosition = !expandedIconPosition }) {
+                                    Text(iconPosition.name)
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowDropDown,
+                                        contentDescription = null,
+                                    )
+                                }
+
+                                DropdownMenu(
+                                    expanded = expandedIconPosition,
+                                    onDismissRequest = { expandedIconPosition = false },
+                                    modifier = Modifier
+                                        .wrapContentSize()
+                                ) {
+                                    IconPosition.values().forEach { ip ->
+                                        DropdownMenuItem(
+                                            onClick = {
+                                                expandedIconPosition = false
+                                                iconPosition = ip
+                                            },
+                                        ) {
+                                            Text(text = ip.name)
+                                        }
                                     }
                                 }
                             }
                         }
-
 
                         Text(text = "Slide to change the degrees(curr=${degrees.toInt()})")
                         Slider(
@@ -216,8 +256,12 @@ class MainActivity : ComponentActivity() {
                                                 column = 2,
                                                 alignment = alignmentPair.second
                                                     ?: Alignment.Center,
-                                                degrees = degrees
-
+                                                degrees = degrees,
+                                                icon = ImageBitmap.imageResource(
+                                                    res = resources,
+                                                    id = R.drawable.dota_32
+                                                ),
+                                                iconPosition = iconPosition
                                             )
                                         )
                                 ) {
