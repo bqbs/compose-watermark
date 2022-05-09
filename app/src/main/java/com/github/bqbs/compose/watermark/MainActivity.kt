@@ -50,7 +50,10 @@ class MainActivity : ComponentActivity() {
                     "Alignment.BottomEnd" to Alignment.BottomEnd,
                 )
                 var iconPosition by remember {
-                    mutableStateOf<IconPosition>(IconPosition.START)
+                    mutableStateOf(IconPosition.START)
+                }
+                var waterMarkText by remember {
+                    mutableStateOf("@一窝鸡尼斯")
                 }
 
                 Surface(color = MaterialTheme.colors.background) {
@@ -121,7 +124,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-
+                        TextField(value = waterMarkText, onValueChange = {waterMarkText = it})
                         Text(text = "Slide to change the degrees(curr=${degrees.toInt()})")
                         Slider(
                             value = degrees / 90 * 0.5f + 0.5f,
@@ -146,7 +149,7 @@ class MainActivity : ComponentActivity() {
                                         .waterMark(
                                             visible = isVisible,
                                             config = WaterMarkConfig(
-                                                markText = "@一窝鸡尼斯",
+                                                markText = waterMarkText,
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 3,
                                                 column = 3,
@@ -187,7 +190,7 @@ class MainActivity : ComponentActivity() {
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
-                                                markText = "@一窝鸡尼斯",
+                                                markText = waterMarkText,
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 1,
                                                 column = 1,
@@ -215,7 +218,7 @@ class MainActivity : ComponentActivity() {
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
-                                                markText = "@一窝鸡尼斯",
+                                                markText = waterMarkText,
                                                 row = 3,
                                                 column = 3,
                                                 alignment = alignmentPair.second
@@ -250,7 +253,7 @@ class MainActivity : ComponentActivity() {
                                         .waterMark(
                                             true,
                                             config = WaterMarkConfig(
-                                                markText = "@一窝鸡尼斯",
+                                                markText = waterMarkText,
                                                 mvTextColor = Color(0xffeeeeee),
                                                 row = 2,
                                                 column = 2,
