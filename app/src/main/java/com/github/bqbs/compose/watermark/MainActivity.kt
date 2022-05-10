@@ -1,9 +1,11 @@
 package com.github.bqbs.compose.watermark
 
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,16 +18,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
+import coil.ImageLoader
 import coil.compose.rememberImagePainter
+import coil.decode.SvgDecoder
+import coil.imageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.github.bqbs.compose.lib.watermark.IconPosition
 import com.github.bqbs.compose.lib.watermark.WaterMarkConfig
 import com.github.bqbs.compose.lib.watermark.waterMark
 import com.github.bqbs.compose.watermark.ui.theme.WaterMarkInComposeTheme
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +48,7 @@ class MainActivity : ComponentActivity() {
                 var degrees by remember { mutableStateOf(0f) }
                 var expanded by remember { mutableStateOf(false) }
                 var expandedIconPosition by remember { mutableStateOf(false) }
-                var alignmentPair by remember { mutableStateOf<Pair<String, Alignment?>>("Change Alignment" to null) }
+                var alignmentPair by remember { mutableStateOf<Pair<String, Alignment?>>("WaterMark Alignment" to null) }
                 var isVisible by remember { mutableStateOf(true) }
                 val alignments = listOf(
                     "Alignment.TopStart" to Alignment.TopStart,
@@ -50,20 +62,21 @@ class MainActivity : ComponentActivity() {
                     "Alignment.BottomEnd" to Alignment.BottomEnd,
                 )
                 var iconPosition by remember {
-                    mutableStateOf(IconPosition.START)
+                    mutableStateOf<IconPosition?>(null)
                 }
                 var waterMarkText by remember {
                     mutableStateOf("@一窝鸡尼斯")
                 }
 
+                var coroutineScope = rememberCoroutineScope()
+
                 Surface(color = MaterialTheme.colors.background) {
                     Column {
                         Row {
                             Box(
-                                modifier = Modifier.padding(20.dp),
+                                modifier = Modifier.padding(10.dp),
                             ) {
 
-                                Text(text = "WaterMarkConfig")
                                 Button(
                                     onClick = { expanded = !expanded }) {
                                     Text(alignmentPair.first)
@@ -92,13 +105,14 @@ class MainActivity : ComponentActivity() {
                                 }
 
                             }
+
                             Box(
-                                modifier = Modifier.padding(20.dp),
+                                modifier = Modifier.padding(10.dp),
                             ) {
 
                                 Button(
                                     onClick = { expandedIconPosition = !expandedIconPosition }) {
-                                    Text(iconPosition.name)
+                                    Text(iconPosition?.name ?: "Icon position")
                                     Icon(
                                         imageVector = Icons.Filled.ArrowDropDown,
                                         contentDescription = null,
@@ -124,12 +138,19 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        TextField(value = waterMarkText, onValueChange = {waterMarkText = it})
+                        TextField(
+                            value = waterMarkText,
+                            onValueChange = {
+                                waterMarkText = it
+                            },
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .padding(0.dp)
+                        )
                         Text(text = "Slide to change the degrees(curr=${degrees.toInt()})")
                         Slider(
                             value = degrees / 90 * 0.5f + 0.5f,
                             onValueChange = {
-
                                 degrees =
                                     ((it - 0.5f) / 0.5f * 90)
                             })
@@ -178,10 +199,26 @@ class MainActivity : ComponentActivity() {
                                         Text(text = "Show WaterMark")
                                     }
 
-
                                 }
 
                                 var size by remember { mutableStateOf(IntSize.Zero) }
+                                val context = LocalContext.current
+                                var waterMarkConfig by remember {
+                                    mutableStateOf(
+                                        WaterMarkConfig(
+                                            markText = waterMarkText,
+                                            mvTextColor = Color(0xffeeeeee),
+                                            row = 1,
+                                            column = 1,
+                                            alignment = alignmentPair.second
+                                                ?: Alignment.Center,
+                                            degrees = degrees,
+                                            paddingHorizontal = 40f.dp.value,
+                                            paddingVertical = 40f.dp.value,
+                                            icon = null
+                                        )
+                                    )
+                                }
                                 Row(
                                     modifier = Modifier
                                         .background(Color(0xff212121))
@@ -189,17 +226,7 @@ class MainActivity : ComponentActivity() {
                                         .height(200.dp)
                                         .waterMark(
                                             true,
-                                            config = WaterMarkConfig(
-                                                markText = waterMarkText,
-                                                mvTextColor = Color(0xffeeeeee),
-                                                row = 1,
-                                                column = 1,
-                                                alignment = alignmentPair.second
-                                                    ?: Alignment.Center,
-                                                degrees = degrees,
-                                                paddingHorizontal = 40f.dp.value,
-                                                paddingVertical = 40f.dp.value
-                                            )
+                                            config = waterMarkConfig
                                         )
                                         .onSizeChanged { size = it }
                                 ) {
@@ -209,6 +236,27 @@ class MainActivity : ComponentActivity() {
                                         contentDescription = "",
                                         alignment = Alignment.Center
                                     )
+                                    coroutineScope.launch {
+                                        if (waterMarkConfig.icon == null) {
+//                                            val url = "https://picsum.photos/320"
+                                            val url =
+                                                "https://github.githubassets.com/favicons/favicon-dark.svg"
+                                            val imageLoader =
+                                                ImageLoader.Builder(context)
+                                                    .components {
+                                                        add(SvgDecoder.Factory())
+                                                    }.build()
+                                            val request = ImageRequest.Builder(context)
+                                                .data(url).size(100, 100)
+                                                .build()
+                                            val icon =
+                                                imageLoader.execute(request).drawable?.toBitmap()
+                                                    ?.asImageBitmap()
+                                            waterMarkConfig = waterMarkConfig.copy(
+                                                icon = icon
+                                            )
+                                        }
+                                    }
                                 }
                                 Row(
                                     modifier = Modifier
@@ -264,7 +312,7 @@ class MainActivity : ComponentActivity() {
                                                     res = resources,
                                                     id = R.drawable.dota_32
                                                 ),
-                                                iconPosition = iconPosition
+                                                iconPosition = iconPosition ?: IconPosition.START
                                             )
                                         )
                                 ) {

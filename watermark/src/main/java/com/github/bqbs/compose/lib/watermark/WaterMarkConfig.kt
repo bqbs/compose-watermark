@@ -17,8 +17,14 @@ data class WaterMarkConfig(
     override var degrees: Float = 0f,
     override var paddingVertical: Float = 0f,
     override var paddingHorizontal: Float = 0f,
+    /**
+     * Support icon
+     */
     var icon: ImageBitmap? = null,
-    var iconPosition: IconPosition = IconPosition.START
+    /**
+     * icon position
+     */
+    var iconPosition: IconPosition? = IconPosition.START
 ) : IWaterMarkConfig
 
 interface IWaterMarkConfig {
