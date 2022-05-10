@@ -1,6 +1,7 @@
 package com.github.bqbs.compose.watermark
 
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -27,7 +28,10 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -232,18 +236,23 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     Image(
                                         modifier = Modifier.fillMaxSize(),
-                                        painter = rememberImagePainter("https://picsum.photos/${size.width}/${size.height}"),
+                                        painter = rememberAsyncImagePainter("https://picsum.photos/${size.width}/${size.height}"),
                                         contentDescription = "",
                                         alignment = Alignment.Center
                                     )
-                                    coroutineScope.launch {
+                                    LaunchedEffect(null) {
                                         if (waterMarkConfig.icon == null) {
 //                                            val url = "https://picsum.photos/320"
-                                            val url =
-                                                "https://github.githubassets.com/favicons/favicon-dark.svg"
+                                            val url = "https://github.githubassets.com/images/mona-loading-default.gif"
+//                                            val url = "https://github.githubassets.com/favicons/favicon-dark.svg"
                                             val imageLoader =
                                                 ImageLoader.Builder(context)
                                                     .components {
+                                                        if (SDK_INT >= 28) {
+                                                            add(ImageDecoderDecoder.Factory())
+                                                        } else {
+                                                            add(GifDecoder.Factory())
+                                                        }
                                                         add(SvgDecoder.Factory())
                                                     }.build()
                                             val request = ImageRequest.Builder(context)
