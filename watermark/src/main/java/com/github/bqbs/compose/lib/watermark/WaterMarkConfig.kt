@@ -24,7 +24,8 @@ data class WaterMarkConfig(
     /**
      * icon position
      */
-    var iconPosition: IconPosition? = IconPosition.START
+    var iconPosition: IconPosition? = IconPosition.START,
+    val foregroundShown: Boolean = true
 ) : IWaterMarkConfig
 
 interface IWaterMarkConfig {

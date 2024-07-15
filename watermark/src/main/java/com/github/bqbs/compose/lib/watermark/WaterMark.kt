@@ -47,6 +47,9 @@ internal class WaterMarkModifier(
 
         paint.textSize
         drawIntoCanvas {
+            if (config.foregroundShown || !visible) {
+                drawContent()
+            }
             it.withSaveLayer(
                 Rect(
                     0f,
@@ -55,7 +58,7 @@ internal class WaterMarkModifier(
                     size.height
                 ), paint = cleanPaint
             ) {
-                drawContent()
+
 
                 if (!visible) {
                     return@drawIntoCanvas
@@ -79,14 +82,17 @@ internal class WaterMarkModifier(
                             // TOP
                             (wmHeight / config.row * i)
                         }
+
                         Alignment.BottomEnd, Alignment.BottomCenter, Alignment.BottomStart, Alignment.Bottom -> {
                             // Bottom
                             (wmHeight / config.row * i) + (wmHeight / config.row - textHeight)
                         }
+
                         Alignment.CenterStart, Alignment.CenterEnd, Alignment.Center, Alignment.CenterVertically -> {
                             // CenterVertically
                             (wmHeight / config.row * i) + (wmHeight / config.row - textHeight) / 2
                         }
+
                         else -> (wmHeight / config.row * i)
 
                     }
@@ -98,14 +104,17 @@ internal class WaterMarkModifier(
                                 // Start
                                 wmWidth / config.column * j
                             }
+
                             Alignment.CenterEnd, Alignment.TopEnd, Alignment.BottomEnd, Alignment.End -> {
                                 // End
                                 (wmWidth / config.column - config.markText.length * config.mvTextSize) + (wmWidth / config.column * j)
                             }
+
                             Alignment.TopCenter, Alignment.BottomCenter, Alignment.Center, Alignment.CenterHorizontally -> {
                                 // CenterHorizontally
                                 ((wmWidth / config.column - config.markText.length * config.mvTextSize) / 2f) + (wmWidth / config.column * j)
                             }
+
                             else -> {
                                 wmWidth / config.column * j
                             }
@@ -134,14 +143,17 @@ internal class WaterMarkModifier(
                                     offsetY = txtBound.top - bmpHeight
                                     offsetX = txtBound.centerX() - bmpWidth / 2
                                 }
+
                                 IconPosition.BELOW -> {
                                     offsetY = txtBound.bottom
                                     offsetX = txtBound.centerX() - bmpWidth / 2
                                 }
+
                                 IconPosition.START -> {
                                     offsetX = txtBound.left - bmpWidth
                                     offsetY = txtBound.centerY() - bmpHeight / 2
                                 }
+
                                 IconPosition.END -> {
                                     offsetX = txtBound.right
                                     offsetY = txtBound.centerY() - bmpHeight / 2
@@ -151,6 +163,13 @@ internal class WaterMarkModifier(
                         }
                     }
                 }
+
+
+
+            }
+
+            if (!config.foregroundShown) {
+                drawContent()
             }
         }
     }

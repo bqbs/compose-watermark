@@ -1,12 +1,10 @@
 package com.github.bqbs.compose.watermark
 
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,19 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
-import coil.imageLoader
 import coil.request.ImageRequest
-import coil.request.SuccessResult
 import com.github.bqbs.compose.lib.watermark.IconPosition
 import com.github.bqbs.compose.lib.watermark.WaterMarkConfig
 import com.github.bqbs.compose.lib.watermark.waterMark
 import com.github.bqbs.compose.watermark.ui.theme.WaterMarkInComposeTheme
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +47,7 @@ class MainActivity : ComponentActivity() {
                 var expandedIconPosition by remember { mutableStateOf(false) }
                 var alignmentPair by remember { mutableStateOf<Pair<String, Alignment?>>("WaterMark Alignment" to null) }
                 var isVisible by remember { mutableStateOf(true) }
+                var foregroundShown by remember { mutableStateOf(true) }
                 val alignments = listOf(
                     "Alignment.TopStart" to Alignment.TopStart,
                     "Alignment.TopCenter" to Alignment.TopCenter,
@@ -180,7 +174,8 @@ class MainActivity : ComponentActivity() {
                                                 column = 3,
                                                 alignment = alignmentPair.second
                                                     ?: Alignment.Center,
-                                                degrees = degrees
+                                                degrees = degrees,
+                                                foregroundShown = foregroundShown
                                             )
                                         ),
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -201,6 +196,15 @@ class MainActivity : ComponentActivity() {
                                             isVisible = it
                                         })
                                         Text(text = "Show WaterMark")
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.padding(20.dp),
+                                    ) {
+                                        Checkbox(checked = foregroundShown, onCheckedChange = {
+                                            foregroundShown = it
+                                        })
+                                        Text(text = "Foreground Shown")
                                     }
 
                                 }
@@ -243,7 +247,8 @@ class MainActivity : ComponentActivity() {
                                     LaunchedEffect(null) {
                                         if (waterMarkConfig.icon == null) {
 //                                            val url = "https://picsum.photos/320"
-                                            val url = "https://github.githubassets.com/images/mona-loading-default.gif"
+                                            val url =
+                                                "https://github.githubassets.com/images/mona-loading-default.gif"
 //                                            val url = "https://github.githubassets.com/favicons/favicon-dark.svg"
                                             val imageLoader =
                                                 ImageLoader.Builder(context)
