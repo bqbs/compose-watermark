@@ -47,7 +47,7 @@ internal class WaterMarkModifier(
 
         paint.textSize
         drawIntoCanvas {
-            if (config.foregroundShown || !visible) {
+            if (config.foregroundDrawing || !visible) {
                 drawContent()
             }
             it.withSaveLayer(
@@ -168,7 +168,7 @@ internal class WaterMarkModifier(
 
             }
 
-            if (!config.foregroundShown) {
+            if (!config.foregroundDrawing) {
                 drawContent()
             }
         }

@@ -175,7 +175,7 @@ class MainActivity : ComponentActivity() {
                                                 alignment = alignmentPair.second
                                                     ?: Alignment.Center,
                                                 degrees = degrees,
-                                                foregroundShown = foregroundShown
+                                                foregroundDrawing = foregroundShown
                                             )
                                         ),
                                     horizontalAlignment = Alignment.CenterHorizontally,
